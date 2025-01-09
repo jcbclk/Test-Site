@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BizLink Canada MVP</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">BizLink Canada</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#listings">Listings</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#login" class="login-btn">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="hero">
+        <div class="hero-content">
+            <h1>Connecting Investors and Small Businesses</h1>
+            <p>Discover opportunities to invest in or sell small businesses across Canada.</p>
+            <a href="#listings" class="cta-btn">Explore Listings</a>
+        </div>
+    </section>
+
+    <section id="features">
+        <h2>Features</h2>
+        <div class="features-container">
+            <div class="feature">
+                <h3>Business Listings</h3>
+                <p>Browse a curated selection of small businesses available for sale or investment.</p>
+            </div>
+            <div class="feature">
+                <h3>Search Filters</h3>
+                <p>Find businesses by location, industry, and price range to suit your goals.</p>
+            </div>
+            <div class="feature">
+                <h3>Secure Messaging</h3>
+                <p>Connect with business owners or investors directly through our secure platform.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="listings">
+        <h2>Business Listings</h2>
+        <div class="listing-container">
+            <div class="listing">
+                <h3>Restaurant in Toronto</h3>
+                <p>Annual Revenue: $250,000</p>
+                <p>Asking Price: $150,000</p>
+                <button class="message-btn" data-owner="Restaurant Owner">Contact Owner</button>
+            </div>
+            <div class="listing">
+                <h3>Retail Shop in Vancouver</h3>
+                <p>Annual Revenue: $500,000</p>
+                <p>Asking Price: $300,000</p>
+                <button class="message-btn" data-owner="Retail Owner">Contact Owner</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <form id="contact-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+
+            <button type="submit">Send</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 BizLink Canada. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const API_URL = "https://your-backend-api.com"; // Replace with your actual backend API URL
+
+        // Secure Messaging Functionality
+        document.querySelectorAll('.message-btn').forEach(button => {
+            button.addEventListener('click', async () => {
+                const owner = button.getAttribute('data-owner');
+                const message = `Hello ${owner}, I am interested in your listing.`;
+
+                try {
+                    const response = await fetch(`${API_URL}/messages`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            recipient: owner,
+                            message: message,
+                        }),
+                    });
+
+                    if (response.ok) {
+                        alert(`Secure message sent to ${owner}!`);
+                    } else {
+                        alert('Failed to send message. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Error sending message:', error);
+                    alert('An error occurred while sending your message.');
+                }
+            });
+        });
+
+        // Contact Form Submission
+        document.getElementById('contact-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+
+            try {
+                const response = await fetch(`${API_URL}/contact`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        message: message,
+                    }),
+                });
+
+                if (response.ok) {
+                    alert(`Thank you, ${name}! Your message has been sent.`);
+                    document.getElementById('contact-form').reset();
+                } else {
+                    alert('Failed to send your message. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error sending contact form:', error);
+                alert('An error occurred while sending your message.');
+            }
+        });
+    </script>
+</body>
+</html>
